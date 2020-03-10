@@ -1,6 +1,6 @@
 ## Project
 
-###This is demo project. To get started with it you will need Docker and Docker Compose 
+This is demo project. To get started with it you will need Docker and Docker Compose 
 
 #### Start
 
