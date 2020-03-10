@@ -133,3 +133,5 @@ settings_local.py
 .idea/
 run/
 !.gitkeep
+main.py
+images/
