@@ -1,16 +1,16 @@
-# Project
+## Project
 
-##This is demo project. To get started with it you will need Docker and Docker Compose 
+###This is demo project. To get started with it you will need Docker and Docker Compose 
 
-### Start
+#### Start
 
-#####You need create: 
+You need create: 
 
 1. settings_local.py an example settings_local.dev.py 
 2. .env an example .env.example 
 3. directory "run" in project folder 
 
-#####Then start docker by command:
+Then start docker by command:
 
 `docker-compose -f dc.yml up -d`
 
