@@ -20,14 +20,12 @@ def _append_db(rate_kwargs, currency, code, sourse_string, sorse_bank):
     else:
         print(f'{sourse_string} {code} no changes.')
 
+
 @shared_task()
 def _privat():
     url = 'https://api.privatbank.ua/p24api/pubinfo?json&exchange&coursid=5'
     response = requests.get(url)
     r_json = response.json()
-
-    # from pdb import set_trace
-    # set_trace()
 
     for rate in r_json:
         if rate['ccy'] in {'USD', 'EUR'}:
@@ -43,6 +41,7 @@ def _privat():
                 'source': mch.SR_PRIVAT,
             }
             _append_db(rate_kwargs, currency, code, 'Privat', mch.SR_PRIVAT)
+
 
 @shared_task()
 def _mono():
@@ -68,6 +67,7 @@ def _mono():
             }
             _append_db(rate_kwargs, currency, code, 'Mono', mch.SR_MONO)
 
+
 @shared_task()
 def _vkurse():
     url = 'http://vkurse.dp.ua/course.json'
@@ -92,11 +92,12 @@ def _vkurse():
             code = mch.CURRENCY_CHOICES_DICT[currency]
             rate_kwargs = {
                 'currency': currency,
-                'buy':  Decimal(cur_buy),
+                'buy': Decimal(cur_buy),
                 'sale': Decimal(cur_sell),
                 'source': mch.SR_VKUR,
             }
             _append_db(rate_kwargs, currency, code, 'Vkurse', mch.SR_VKUR)
+
 
 @shared_task()
 def _otp():
@@ -122,11 +123,12 @@ def _otp():
             rate_kwargs = {
                 'currency': currency,
                 'buy': Decimal(str(round(float(q['buy']), 2))),
-                'sale':  Decimal(str(round(float(q['sale']), 2))),
+                'sale': Decimal(str(round(float(q['sale']), 2))),
                 'source': mch.SR_OTP,
             }
             cur_list.remove(cur)
             _append_db(rate_kwargs, currency, code, 'OTP', mch.SR_OTP)
+
 
 @shared_task()
 def _pumb():
@@ -144,10 +146,10 @@ def _pumb():
             list_1.append(i[1])
         elif 5 <= i[0] <= 7:
             list_2.append(i[1])
-    list_all=[list_1 , list_2]
+    list_all = [list_1, list_2]
     list_dict = []
     for x in list_all:
-        dict_x = {'value': x[0], 'buy':x[1], 'sale':x[2]}
+        dict_x = {'value': x[0], 'buy': x[1], 'sale': x[2]}
         list_dict.append(dict_x)
 
     cur_list = {'USD', 'EUR'}
@@ -165,10 +167,11 @@ def _pumb():
             rate_kwargs = {
                 'currency': currency,
                 'buy': Decimal(th.get('buy')),
-                'sale':  Decimal(th.get('sale')),
+                'sale': Decimal(th.get('sale')),
                 'source': mch.SR_PUMB,
             }
             _append_db(rate_kwargs, currency, code, 'PUMB', mch.SR_PUMB)
+
 
 @shared_task()
 def _alfa():
@@ -176,13 +179,13 @@ def _alfa():
     response = requests.get(url)
 
     soup = BeautifulSoup(response.content, 'html.parser')
-    p = soup.find_all('span', class_ = 'rate-number')
+    p = soup.find_all('span', class_='rate-number')
     dict_usd = {'value': 'USD'}
     dict_eur = {'value': 'EUR'}
     for th in p:
         q = th.attrs
         if q['data-currency'] == 'USD_BUY':
-            dict_usd['buy']= float(th.get_text())
+            dict_usd['buy'] = float(th.get_text())
         elif q['data-currency'] == 'USD_SALE':
             dict_usd['sale'] = float(th.get_text())
         elif q['data-currency'] == 'EUR_BUY':
@@ -204,11 +207,12 @@ def _alfa():
             code = mch.CURRENCY_CHOICES_DICT[currency]
             rate_kwargs = {
                 'currency': currency,
-                'buy':Decimal(str(round(th['buy'], 2))),
-                'sale':  Decimal(str(round(th['sale'], 2))),
+                'buy': Decimal(str(round(th['buy'], 2))),
+                'sale': Decimal(str(round(th['sale'], 2))),
                 'source': mch.SR_ALFA,
             }
             _append_db(rate_kwargs, currency, code, 'Alfa', mch.SR_ALFA)
+
 
 @shared_task()
 def parse_rates():

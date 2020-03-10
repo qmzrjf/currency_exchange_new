@@ -1,0 +1,24 @@
+{%extends 'base.html'%}
+
+{%block title%}Rates{% endblock title%}
+
+{%block content%}
+    <h2>Rates</h2>
+    <table class="table table-striped">
+  <thead>
+    <tr>
+      <th scope="col">Source</th>
+      <th scope="col">Currency</th>
+      <th scope="col">Buy</th>
+      <th scope="col">Sale</th>
+    </tr>
+        {% for rate in object_list %}
+
+    <tr><td>{{rate.get_source_display}}</td>
+    <td>{{rate.get_currency_display}}</td>
+    <td>{{rate.buy}}</td>
+    <td>{{rate.sale}}</td></tr>
+
+        {% endfor %}
+    </table>
+        {% endblock content%}
