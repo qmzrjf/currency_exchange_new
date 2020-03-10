@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.views.generic import UpdateView, CreateView, ListView
+from django.views.generic import UpdateView, CreateView
 from account.models import User, Contact
 from account.tasks import send_emial_aync
 from django.urls import reverse_lazy
