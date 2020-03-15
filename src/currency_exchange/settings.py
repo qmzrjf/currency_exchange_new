@@ -112,6 +112,7 @@ CACHES = {
 CELERY_BROKER_URL = 'amqp://{}:{}@{}:{}//'.format(
     os.environ['RABBITMQ_DEFAULT_USER'],
     os.environ['RABBITMQ_DEFAULT_PASS'],
+    # 'guest',
     os.environ['RABBITMQ_DEFAULT_HOST'],
     os.environ['RABBITMQ_DEFAULT_PORT'],
 )
@@ -156,6 +157,9 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
 ]
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, '..', "static_content", "media")
 
 AUTH_USER_MODEL = 'account.User'
 

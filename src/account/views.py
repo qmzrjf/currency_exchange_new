@@ -1,5 +1,6 @@
+from django.http import HttpResponse
 from django.shortcuts import render
-from django.views.generic import UpdateView, CreateView
+from django.views.generic import UpdateView, CreateView, View
 from account.models import User, Contact
 from account.tasks import send_emial_aync
 from django.urls import reverse_lazy
@@ -14,12 +15,16 @@ class MyProfile(UpdateView):
     fields = ('email',)
     success_url = reverse_lazy('index')
 
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        return queryset.filter(id=self.request.user.id)
+
 
 class ContactUs(CreateView):
     template_name = 'contact.html'
     queryset = Contact.objects.all()
     fields = ('email', 'subject', 'text')
-    success_url = reverse_lazy('index')
+    success_url = reverse_lazy('contact')
 
     def form_valid(self, form):
         response = super().form_valid(form)
@@ -27,8 +32,8 @@ class ContactUs(CreateView):
         message = form.cleaned_data.get('text')
         email_from = settings.EMAIL_HOST_USER
         recipient_list = [form.cleaned_data.get('email'), ]
-        print(self.object)
-        send_mail(subject, message, email_from, recipient_list)
-        # send_emial_aync.delay(subject, message, email_from, recipient_list)
+        # send_mail(subject, message, email_from, recipient_list)
+        send_emial_aync.delay(subject, message, email_from, recipient_list)
 
         return response
+
