@@ -135,3 +135,4 @@ run/
 !.gitkeep
 main.py
 images/
+static_content/
