@@ -6,32 +6,34 @@ import csv
 class LastRates(ListView):
     model = Rate
     template_name = 'last_rates.html'
-    queryset = Rate.objects.all()[:20]
+    queryset = Rate.objects.all()
 
 
 class RateCSV(View):
+    HEADERS = [
+        'id',
+        'created',
+        'source',
+        'currency',
+        'buy',
+        'sale',
+
+    ]
 
     def get(self, request):
         response = HttpResponse(content_type='text/csv')
         response['Content-Disposition'] = 'attachment; filename="rates.csv"'
         writer = csv.writer(response)
-        headers = [
-            'id',
-            'created',
-            'currency',
-            'source',
-            'buy',
-            'sale',
-        ]
-        writer.writerow(headers)
+
+        writer.writerow(self.HEADERS)
+
         for rate in Rate.objects.all().iterator():
-            writer.writerow(map(str, [
-                rate.id,
-                rate.created,
-                rate.get_currency_display(),
-                rate.get_source_display(),
-                rate.buy,
-                rate.sale,
-            ]))
+            row = [
+                getattr(rate, f'get_{attr}_display')()
+                if hasattr(rate, f'get_{attr}_display') else getattr(rate, attr)
+                for attr in self.HEADERS
+            ]
+            writer.writerow(row)
+
         return response
 

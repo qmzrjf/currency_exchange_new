@@ -8,7 +8,6 @@ from currency.models import Rate
 from currency import model_choices as mch
 
 
-@shared_task()
 def _append_db(rate_kwargs, currency, code, sourse_string, sorse_bank):
     new_rate = Rate(**rate_kwargs)
     last_rate = Rate.objects.filter(currency=currency, source=sorse_bank).last()
@@ -216,6 +215,7 @@ def _alfa():
 
 @shared_task()
 def parse_rates():
+    # pass
     _privat.delay()
     _mono.delay()
     _vkurse.delay()

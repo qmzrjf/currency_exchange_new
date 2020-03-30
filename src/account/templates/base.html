@@ -30,12 +30,12 @@
     <a class="navbar-brand js-scroll-trigger" href="#page-top">
       <span class="d-block d-lg-none">Clarence Taylor</span>
 
-      {% if user.is_authenticated %}
-
-      <span class="d-none d-lg-block">
-        <img class="img-fluid img-profile rounded-circle mx-auto mb-2" src="{{request.user.avatar.url}}" alt="">
-      </span>
-
+      {% if user.is_authenticated and request.user.avatar.url != None %}
+   <span class="d-none d-lg-block">
+      <a href="{% url 'profile' request.user.id %}">
+         <img class="img-fluid img-profile rounded-circle mx-auto mb-2" src="{{request.user.avatar.url}}"  alt="">
+      </a>
+    </span>
       {% endif %}
 
     </a>
@@ -44,20 +44,15 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav">
+
+          {% if user.is_authenticated %}
         <li class="nav-item">
-          <a class="nav-link js-scroll-trigger" href="#about">About</a>
+          <a class="nav-link js-scroll-trigger">Hello, {{ user.first_name }}!</a>
         </li>
+        {% endif %}
+
         <li class="nav-item">
-          <a class="nav-link js-scroll-trigger" href="#experience">Experience</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link js-scroll-trigger" href="#education">Education</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link js-scroll-trigger" href="#skills">Skills</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link js-scroll-trigger" href="#interests">Interests</a>
+          <a class="nav-link js-scroll-trigger">About</a>
         </li>
         <li class="nav-item">
           <a class="nav-link js-scroll-trigger" href="{%url 'download-rates'%}">Download Rates</a>
@@ -83,6 +78,9 @@
 
         <li class="nav-item">
           <a class="nav-link" href="{% url 'login' %}">Login</a>
+        </li>
+          <li class="nav-item">
+          <a class="nav-link" href="{% url 'signup' %}">SignUp</a>
         </li>
 
 {% endif %}
