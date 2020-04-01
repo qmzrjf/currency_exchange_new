@@ -26,19 +26,25 @@ class Command(BaseCommand):
 
             k = r_json.get("exchangeRate")
             for i in k:
-                if i.get('currency') == 'USD':
-                    Rate.objects.create(
-                        created=str(d),
-                        currency=mch.CURR_USD,
-                        buy=i['purchaseRate'],
-                        sale=i['saleRate'],
-                        source=mch.SR_PRIVAT
-                    )
-                if i.get('currency') == 'EUR':
-                    Rate.objects.create(
-                        created=str(d),
-                        currency=mch.CURR_EUR,
-                        buy=i['purchaseRate'],
-                        sale=i['saleRate'],
-                        source=mch.SR_PRIVAT
-                    )
+                if dict.get('currency') == 'USD':
+                        key_buy_exist = 'purchaseRate' in dict
+                        key_sale_exist = 'saleRate' in dict
+                        if key_buy_exist and key_sale_exist:
+                            Rate.objects.create(
+                                created=str(d),
+                                currency=mch.CURR_USD,
+                                buy=dict['purchaseRate'],
+                                sale=dict['saleRate'],
+                                source=mch.SR_PRIVAT
+                            )
+                if dict.get('currency') == 'EUR':
+                        key_buy_exist = 'purchaseRate' in dict
+                        key_sale_exist = 'saleRate' in dict
+                        if key_buy_exist and key_sale_exist:
+                            Rate.objects.create(
+                                created=str(d),
+                                currency=mch.CURR_EUR,
+                                buy=dict['purchaseRate'],
+                                sale=dict['saleRate'],
+                                source=mch.SR_PRIVAT
+                            )
