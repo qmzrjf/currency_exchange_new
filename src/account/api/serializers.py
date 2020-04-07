@@ -15,11 +15,11 @@ class ContactSerializer(serializers.ModelSerializer):
             'text',
         )
 
-        # def create(self, validated_data):
-        #     email = (self.validated_data['email'],)
-        #     message = self.validated_data['text']
-        #     subject = self.validated_data['subject']
-        #     email_from = settings.EMAIL_HOST_USER
-        #     send_emial_aync.delay(subject, message, email_from, email)
-        #
-        #     return Contact(**validated_data)
+    def create(self, validated_data):
+        email = [self.validated_data['email']]
+        message = self.validated_data['text']
+        subject = self.validated_data['subject']
+        email_from = settings.EMAIL_HOST_USER
+        send_emial_aync.delay(subject, message, email_from, email)
+
+        return super().create(self.validated_data)

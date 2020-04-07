@@ -5,7 +5,7 @@ from django.contrib.auth.models import AbstractUser
 from account.tasks import send_activation_code_async
 
 
-def avatar_path(instace, filename:str):
+def avatar_path(instace, filename: str):
     ext = filename.split('.')[-1]
     f = str(uuid4())
     filename = f'{f}.{ext}'
@@ -25,7 +25,7 @@ class Contact(models.Model):
 
 class ActivationCode(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='activation_codes')
-    created = models.DateTimeField(auto_now_add= True)
+    created = models.DateTimeField(auto_now_add=True)
     code = models.UUIDField(default=uuid4, editable=False, unique=True)
     is_activated = models.BooleanField(default=False)
 

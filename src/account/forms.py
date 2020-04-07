@@ -4,6 +4,7 @@ from django import forms
 
 
 class SignUpForm(ModelForm):
+
     password = forms.CharField(widget=forms.PasswordInput())
     password2 = forms.CharField(widget=forms.PasswordInput())
 

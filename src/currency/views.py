@@ -3,10 +3,27 @@ from django.views.generic import ListView, View
 from currency.models import Rate
 import csv
 
-class LastRates(ListView):
+from django_filters.views import FilterView
+from currency.filters import RatesFilter
+
+class LastRates(FilterView):
+    filterset_class = RatesFilter
     model = Rate
     template_name = 'last_rates.html'
     queryset = Rate.objects.all()
+    paginate_by = 10
+
+
+    def get_context_data(self, *args, **kwargs):
+        from urllib.parse import urlencode
+        context = super().get_context_data(*args, **kwargs)
+        query_params = dict(self.request.GET.items())
+        if 'page' in query_params:
+            del query_params['page']
+        context['query_params'] = urlencode(query_params)
+
+
+        return context
 
 
 class RateCSV(View):
@@ -36,4 +53,3 @@ class RateCSV(View):
             writer.writerow(row)
 
         return response
-

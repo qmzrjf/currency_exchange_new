@@ -2,6 +2,8 @@ from django.db import models
 
 from currency import model_choices as mch
 from datetime import date
+
+
 class Rate(models.Model):
     created = models.DateTimeField(default=date.today)
     currency = models.PositiveSmallIntegerField(choices=mch.CURRENCY_CHOICES)

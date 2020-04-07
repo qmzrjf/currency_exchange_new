@@ -7,5 +7,4 @@ class UserAdmin(admin.ModelAdmin):
     fields = ['email', 'username', 'is_active', 'avatar']
 
 
-
 admin.site.register(User, UserAdmin)

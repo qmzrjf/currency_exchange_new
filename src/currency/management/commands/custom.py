@@ -25,26 +25,26 @@ class Command(BaseCommand):
             r_json = response.json()
 
             k = r_json.get("exchangeRate")
-            for i in k:
-                if dict.get('currency') == 'USD':
-                        key_buy_exist = 'purchaseRate' in dict
-                        key_sale_exist = 'saleRate' in dict
-                        if key_buy_exist and key_sale_exist:
-                            Rate.objects.create(
-                                created=str(d),
-                                currency=mch.CURR_USD,
-                                buy=dict['purchaseRate'],
-                                sale=dict['saleRate'],
-                                source=mch.SR_PRIVAT
-                            )
-                if dict.get('currency') == 'EUR':
-                        key_buy_exist = 'purchaseRate' in dict
-                        key_sale_exist = 'saleRate' in dict
-                        if key_buy_exist and key_sale_exist:
-                            Rate.objects.create(
-                                created=str(d),
-                                currency=mch.CURR_EUR,
-                                buy=dict['purchaseRate'],
-                                sale=dict['saleRate'],
-                                source=mch.SR_PRIVAT
-                            )
+            for dict_cur in k:
+                if dict_cur.get('currency') == 'USD':
+                    key_buy_exist = 'purchaseRate' in dict_cur
+                    key_sale_exist = 'saleRate' in dict_cur
+                    if key_buy_exist and key_sale_exist:
+                        Rate.objects.create(
+                            created=str(d),
+                            currency=mch.CURR_USD,
+                            buy=dict_cur['purchaseRate'],
+                            sale=dict_cur['saleRate'],
+                            source=mch.SR_PRIVAT
+                        )
+                if dict_cur.get('currency') == 'EUR':
+                    key_buy_exist = 'purchaseRate' in dict_cur
+                    key_sale_exist = 'saleRate' in dict_cur
+                    if key_buy_exist and key_sale_exist:
+                        Rate.objects.create(
+                            created=str(d),
+                            currency=mch.CURR_EUR,
+                            buy=dict_cur['purchaseRate'],
+                            sale=dict_cur['saleRate'],
+                            source=mch.SR_PRIVAT
+                        )

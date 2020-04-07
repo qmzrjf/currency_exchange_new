@@ -25,17 +25,17 @@ class ContactsView(generics.ListCreateAPIView):
     filter_backends = (filters.DjangoFilterBackend,)
     filterset_class = ContactFilter
 
-    def post(self, request, *args, **kwargs):
-        subject = request.POST['subject']
-        text = request.POST['text']
-        email = (request.POST['email'],)
-        email_from = settings.EMAIL_HOST_USER
-
-        send_emial_aync.delay(subject, text, email_from, email)
-
-        return self.create(request, *args, **kwargs)
+    def get_queryset(self):
+        super().get_queryset()
+        self.queryset = Contact.objects.filter(email=self.request.user.email)
+        return self.queryset
 
 
-class ContactView(generics.RetrieveUpdateDestroyAPIView):
+class ContactView(generics.RetrieveUpdateAPIView):
     queryset = Contact.objects.all()
     serializer_class = ContactSerializer
+
+    def get_queryset(self):
+        super().get_queryset()
+        self.queryset = Contact.objects.filter(email=self.request.user.email)
+        return self.queryset
