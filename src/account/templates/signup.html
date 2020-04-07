@@ -3,9 +3,31 @@
 {%block title%}SignUp{% endblock title%}
 
 {%block content%}
+
+{% load crispy_forms_tags %}
+
+
 <form method = "post">
+
+        <h2 class="text-center">Sign Up</h2>
+     <div>
+
+      <div class="col-6 p-0 mx-auto col-sm-6 col-md-5 col-lg-4">
+        {{ form.email|as_crispy_field }}
+      </div>
+        <div class="col-6 p-0 mx-auto col-sm-6 col-md-5 col-lg-4">
+        {{ form.username|as_crispy_field }}
+      </div>
+        <div class="col-6 p-0 mx-auto col-sm-6 col-md-5 col-lg-4">
+        {{ form.password|as_crispy_field }}
+      </div>
+         <div class="col-6 p-0 mx-auto col-sm-6 col-md-5 col-lg-4">
+        {{ form.password2|as_crispy_field }}
+      </div>
+
+
+</div>
     {%csrf_token%}
-    {{ form.as_p}}
-    <button type = "submit">Submit</button>
+      <button type="submit"  class="btn btn-light col-sm-6 col-md-5 col-lg-4 mt-5 mx-auto d-block">Sign Up</button>
 </form>
 {% endblock content%}

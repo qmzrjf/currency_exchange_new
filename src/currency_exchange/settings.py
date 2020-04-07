@@ -18,7 +18,6 @@ from celery.schedules import crontab
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
@@ -29,7 +28,6 @@ SECRET_KEY = 'o7lhdr^id7ahyqiyzk0neyb#qz-&&=+ph87kxpkk'
 DEBUG = False
 
 ALLOWED_HOSTS = []
-
 
 # Application definition
 
@@ -43,7 +41,9 @@ INSTALLED_APPS = [
 
     'django_extensions',
     'rest_framework',
+    'django_filters',
     'rest_framework_swagger',
+    'crispy_forms',
 
     'account',
     'currency',
@@ -79,7 +79,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'currency_exchange.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
@@ -104,14 +103,12 @@ DATABASES = {
     }
 }
 
-
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
         'LOCATION': f'memcached:11211',
     }
 }
-
 
 CELERY_BROKER_URL = 'amqp://{}:{}@{}:{}//'.format(
     os.environ['RABBITMQ_DEFAULT_USER'],
@@ -145,7 +142,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/
 
@@ -158,7 +154,6 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = False
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
@@ -182,6 +177,8 @@ CELERY_BEAT_SCHEDULE = {
         'schedule': crontab(minute='*/15')
     }
 }
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 REST_USE_JWT = True
 
@@ -209,14 +206,17 @@ SIMPLE_JWT = {
     'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
 }
 REST_FRAMEWORK = {
-    # 'DEFAULT_AUTHENTICATION_CLASSES': (
-    # #     # 'rest_framework.authentication.SessionAuthentication',
-    #     'rest_framework_simplejwt.authentication.JWTAuthentication',
-    # ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        # 'rest_framework.authentication.SessionAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
     'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema',
-#     'DEFAULT_PERMISSION_CLASSES': [
-#         'rest_framework.permissions.IsAuthenticated',
-#     ]
+    'DEFAULT_FILTER_BACKENDS': (
+        'django_filters.rest_framework.DjangoFilterBackend',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': [
+            'rest_framework.permissions.IsAuthenticated',
+        ]
 }
 
 SWAGGER_SETTINGS = {
@@ -235,4 +235,3 @@ try:
     from currency_exchange.settings_local import *  # noqa
 except ImportError:
     print('settings_local.py not found!\n' * 5)
-
