@@ -1,10 +1,15 @@
 from django.http import HttpResponse
-from django.views.generic import ListView, View
+from django.views.generic import ListView, View, TemplateView
 from currency.models import Rate
 import csv
-
+from urllib.parse import urlencode
 from django_filters.views import FilterView
 from currency.filters import RatesFilter
+from currency import model_choices as mch
+from django.core.cache import cache
+
+from currency.utils import generate_rate_cache_key
+
 
 class LastRates(FilterView):
     filterset_class = RatesFilter
@@ -15,7 +20,7 @@ class LastRates(FilterView):
 
 
     def get_context_data(self, *args, **kwargs):
-        from urllib.parse import urlencode
+
         context = super().get_context_data(*args, **kwargs)
         query_params = dict(self.request.GET.items())
         if 'page' in query_params:
@@ -53,3 +58,36 @@ class RateCSV(View):
             writer.writerow(row)
 
         return response
+
+class LatestRates(TemplateView):
+    template_name = "latest-rates.html"
+
+    def get_context_data(self, *args, **kwargs):
+
+        context = super().get_context_data(*args, **kwargs)
+        rates = []
+        for bank in mch.SOURCE_CHOICES:
+            source = bank[0]
+            for curr in mch.CURRENCY_CHOICES:
+                currency = curr[0]
+
+                cache_key = generate_rate_cache_key(source, currency)
+                rate = cache.get(cache_key)
+                if rate is None:
+                    rate = Rate.objects.filter(source=source, currency=currency).order_by('created').last()
+                    if rate:
+                        rate_dict = {
+                            'currency': rate.currency,
+                            'source': rate.source,
+                            'sale': rate.sale,
+                            'buy': rate.buy,
+                            'created': rate.created,
+                        }
+                        rates.append(rate_dict)
+                        cache.set(cache_key, rate_dict, 60*15)
+                else:
+                    rates.append(rate)
+
+        context["rates"] = rates
+
+        return context

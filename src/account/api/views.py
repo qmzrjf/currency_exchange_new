@@ -31,7 +31,7 @@ class ContactsView(generics.ListCreateAPIView):
         return self.queryset
 
 
-class ContactView(generics.RetrieveUpdateAPIView):
+class ContactView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Contact.objects.all()
     serializer_class = ContactSerializer
 

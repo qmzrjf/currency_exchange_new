@@ -7,7 +7,7 @@ from account.models import User
 from rest_framework.test import APIClient
 
 
-@pytest.fixture(scope='session', autouse = True)
+@pytest.fixture(scope='session', autouse=True)
 def db_session(request, django_db_setup, django_db_blocker):
     """
     Changed scope to 'session'

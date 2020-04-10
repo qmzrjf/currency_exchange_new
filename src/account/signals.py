@@ -8,9 +8,11 @@ import shutil
 from django.conf import settings
 
 
+
 @receiver(pre_save, sender=User)
 def pre_save_user_avatar(sender, instance, **kwargs):
-    if instance.avatar:
-        shutil.rmtree(os.path.join(settings.MEDIA_ROOT, 'avatar', str(instance.id)))
-    else:
+    try:
+        if instance.avatar not in (None, User.objects.get(id=instance.id).avatar):
+            shutil.rmtree(os.path.join(settings.MEDIA_ROOT, 'avatar', str(instance.id)))
+    except:
         pass

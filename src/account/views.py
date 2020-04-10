@@ -14,7 +14,7 @@ from django.core.mail import send_mail
 class MyProfile(UpdateView):
     template_name = 'my_profile.html'
     queryset = User.objects.filter(is_active=True)
-    fields = ('email', 'first_name', 'last_name')
+    fields = ('email', 'first_name', 'last_name', 'avatar')
     success_url = reverse_lazy('index')
 
     def get_queryset(self):

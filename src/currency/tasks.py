@@ -8,6 +8,8 @@ from currency.models import Rate
 from currency import model_choices as mch
 
 
+from currency_exchange.settings import BASE_DIR
+
 def _append_db(rate_kwargs, currency, code, sourse_string, sorse_bank):
     new_rate = Rate(**rate_kwargs)
     last_rate = Rate.objects.filter(currency=currency, source=sorse_bank).last()
@@ -47,7 +49,6 @@ def _mono():
     url = 'https://api.monobank.ua/bank/currency'
     response = requests.get(url)
     r_json = response.json()
-
     for rate in r_json:
         if rate['currencyCodeA'] in {840, 978} and rate['currencyCodeB'] == 980:
             mono_code = {
@@ -72,11 +73,9 @@ def _vkurse():
     url = 'http://vkurse.dp.ua/course.json'
     response = requests.get(url)
     r_json = response.json()
-
     for i in r_json:
         if i in {'Dollar', 'Euro'}:
             k = r_json.get(i)
-
             vkurse_code = {
                 'Dollar': mch.CURR_USD,
                 'Euro': mch.CURR_EUR,
@@ -106,6 +105,8 @@ def _otp():
     soup = BeautifulSoup(response.content, 'html.parser')
     p = soup.find_all('option')
     cur_list = ['USD', 'EUR']
+    from pdb import set_trace
+    set_trace()
     for th in p:
         q = th.attrs
         # from pdb import set_trace
@@ -215,9 +216,15 @@ def _alfa():
 
 @shared_task()
 def parse_rates():
-    _privat.delay()
-    _mono.delay()
-    _vkurse.delay()
-    _otp.delay()
-    _pumb.delay()
-    _alfa.delay()
+    # _privat.delay()
+    # _mono.delay()
+    # _vkurse.delay()
+    # _otp.delay()
+    # _pumb.delay()
+    # _alfa.delay()
+    _privat()
+    _mono()
+    _vkurse()
+    _otp()
+    _pumb()
+    _alfa()
