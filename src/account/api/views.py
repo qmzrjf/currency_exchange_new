@@ -3,6 +3,7 @@ import json
 from rest_framework import generics
 
 from account.api.serializers import ContactSerializer
+from account.api.pagination import ContactResultsSetPagination
 from account.models import Contact
 from django_filters import rest_framework as filters
 from account.tasks import send_emial_aync
@@ -24,6 +25,7 @@ class ContactsView(generics.ListCreateAPIView):
     serializer_class = ContactSerializer
     filter_backends = (filters.DjangoFilterBackend,)
     filterset_class = ContactFilter
+    pagination_class = ContactResultsSetPagination
 
     def get_queryset(self):
         super().get_queryset()
@@ -34,6 +36,7 @@ class ContactsView(generics.ListCreateAPIView):
 class ContactView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Contact.objects.all()
     serializer_class = ContactSerializer
+    pagination_class = ContactResultsSetPagination
 
     def get_queryset(self):
         super().get_queryset()

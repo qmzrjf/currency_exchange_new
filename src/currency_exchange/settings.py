@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'django_filters',
     'rest_framework_swagger',
     'crispy_forms',
+    'compressor',
 
     'account',
     'currency',
@@ -231,6 +232,12 @@ SWAGGER_SETTINGS = {
         }
     },
 }
+
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    'compressor.finders.CompressorFinder',
+)
 try:
     from currency_exchange.settings_local import *  # noqa
 except ImportError:

@@ -3,8 +3,10 @@ import json
 from rest_framework import generics
 
 from currency.api.serializers import RateSerializer
+from currency.api.pagination import RateResultsSetPagination
 from currency.models import Rate
 from django_filters import rest_framework as filters
+
 
 
 class RateFilter(filters.FilterSet):
@@ -26,8 +28,10 @@ class RatesView(generics.ListCreateAPIView):
     serializer_class = RateSerializer
     filter_backends = (filters.DjangoFilterBackend,)
     filterset_class = RateFilter
+    pagination_class = RateResultsSetPagination
 
 
 class RateView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Rate.objects.all()
     serializer_class = RateSerializer
+    pagination_class = RateResultsSetPagination
