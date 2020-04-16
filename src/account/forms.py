@@ -10,7 +10,7 @@ class SignUpForm(ModelForm):
 
     class Meta:
         model = User
-        fields = ('email', 'username', 'password', 'password2')
+        fields = ('email', 'username', 'password', 'password2', 'phone')
 
     def clean(self):
         cleaned_data = super().clean()
@@ -25,6 +25,10 @@ class SignUpForm(ModelForm):
         user.is_active = False
         user.save()
 
-        activation_code = user.activation_codes.create()
-        activation_code.send_activation_code()
+        sms_code = user.activation_code_sms.create()
+        sms_code.send_activation_sms_code()
         return user
+
+
+class ActivateForm(forms.Form):
+    sms_code = forms.CharField()
